@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Products from "./Products";
 import Options from "./Options";
+import ErrorBanner from "./ErrorBanner";
 
 export default function Type({ orderType }) {
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     loadItems(orderType);
@@ -15,7 +17,7 @@ export default function Type({ orderType }) {
       const response = await axios.get(`http://localhost:4000/${orderType}`);
       setItems(response.data);
     } catch (error) {
-      console.log(error);
+      setError(true);
     }
   };
 
@@ -28,6 +30,10 @@ export default function Type({ orderType }) {
       imagePath={item.imagePath}
     />
   ));
+
+  if (error) {
+    return <ErrorBanner />;
+  }
 
   return (
     <div>
